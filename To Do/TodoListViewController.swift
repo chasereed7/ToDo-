@@ -8,20 +8,19 @@
 
 import UIKit
 
-//MARK Start of code ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
 class TodoListViewController: UITableViewController {
 
     var itemArray = ["Find Mike","Buy Eggos","Destroy Demogorgon"]
     
-    //MARK - ViewDidLoad method
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
-        
-            super.viewDidLoad()
+        super.viewDidLoad()
  
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+            itemArray = items
+        }
     }
-
 
     //MARK - NumberOfRowsInSection Section –––––––––––––––––––––––––––––––––––––––––––––––––––––
     
@@ -47,19 +46,13 @@ class TodoListViewController: UITableViewController {
         
         
         if  tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            
         } else {
-            
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            
         }
-        
             tableView.deselectRow(at: indexPath, animated: true)
     }
     
-//MARK - ADD BUTTON PRESSED METHOD ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
     
     @IBAction func AddButtonPressed(_ sender: UIBarButtonItem) {
     
@@ -71,27 +64,25 @@ class TodoListViewController: UITableViewController {
             // what will happen once the user cilcks the add item button on our UIAlert
             
             self.itemArray.append(textField.text!)
+           
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
             
             self.tableView.reloadData()
-            
-            print("––––––success!––––––√")
-            
         }
+        
         alert.addTextField { (alertTextField) in
-            
             alertTextField.placeholder = "Create new Item"
             textField = alertTextField
             
         }
         
+        
         alert.addAction(action)
 
-            self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
         
     }
     
     
+
 }
-
-
-//MARK - End of code for now ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
